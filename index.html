@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chess Clock | Pro Timer</title>
+    <meta name="description" content="Professional digital chess clock with precise timing, custom controls, and beautiful design">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="logo">
+                <span class="logo-icon">♔</span>
+                Chess Clock
+            </h1>
+            <div class="header-controls">
+                <button id="themeToggle" class="icon-btn" aria-label="Toggle theme">
+                    <span class="theme-icon sun">☀️</span>
+                    <span class="theme-icon moon">🌙</span>
+                </button>
+                <button id="settingsBtn" class="icon-btn" aria-label="Settings">⚙️</button>
+            </div>
+        </header>
+
+        <!-- Preset Selector -->
+        <nav class="preset-nav">
+            <button class="preset-btn" data-preset="bullet">
+                <span class="preset-icon">⚡</span>
+                <span class="preset-name">Bullet</span>
+                <span class="preset-time">1 min</span>
+            </button>
+            <button class="preset-btn active" data-preset="blitz">
+                <span class="preset-icon">🔥</span>
+                <span class="preset-name">Blitz</span>
+                <span class="preset-time">5+3</span>
+            </button>
+            <button class="preset-btn" data-preset="rapid">
+                <span class="preset-icon">⏱️</span>
+                <span class="preset-name">Rapid</span>
+                <span class="preset-time">15+10</span>
+            </button>
+            <button class="preset-btn" data-preset="classical">
+                <span class="preset-icon">🏛️</span>
+                <span class="preset-name">Classical</span>
+                <span class="preset-time">30+30</span>
+            </button>
+            <button class="preset-btn" data-preset="custom">
+                <span class="preset-icon">✏️</span>
+                <span class="preset-name">Custom</span>
+                <span class="preset-time">--:--</span>
+            </button>
+        </nav>
+
+        <!-- Main Timer Area -->
+        <main class="timer-container">
+            <!-- Player 1 (White) -->
+            <div class="player-panel player-1" id="player1Panel" data-player="1">
+                <div class="player-info">
+                    <span class="player-piece">♔</span>
+                    <span class="player-name">White</span>
+                </div>
+                <div class="timer-display" id="timer1">
+                    <span class="time-value">05:00</span>
+                    <span class="time-ms">.00</span>
+                </div>
+                <div class="moves-count">
+                    <span id="moves1">0</span> moves
+                </div>
+                <div class="increment-badge" id="increment1">+3s</div>
+            </div>
+
+            <!-- Center Controls -->
+            <div class="center-controls">
+                <button id="pauseBtn" class="control-btn pause-btn" disabled>
+                    <span class="btn-icon pause-icon">⏸</span>
+                    <span class="btn-icon play-icon">▶</span>
+                    <span class="btn-text">Pause</span>
+                </button>
+                <button id="resetBtn" class="control-btn reset-btn">
+                    <span class="btn-icon">↺</span>
+                    <span class="btn-text">Reset</span>
+                </button>
+            </div>
+
+            <!-- Player 2 (Black) -->
+            <div class="player-panel player-2" id="player2Panel" data-player="2">
+                <div class="player-info">
+                    <span class="player-piece">♚</span>
+                    <span class="player-name">Black</span>
+                </div>
+                <div class="timer-display" id="timer2">
+                    <span class="time-value">05:00</span>
+                    <span class="time-ms">.00</span>
+                </div>
+                <div class="moves-count">
+                    <span id="moves2">0</span> moves
+                </div>
+                <div class="increment-badge" id="increment2">+3s</div>
+            </div>
+        </main>
+
+        <!-- Game Status -->
+        <div class="game-status" id="gameStatus">
+            <span class="status-text">Tap a timer or press Space to start</span>
+        </div>
+
+        <!-- Timeout Overlay -->
+        <div class="timeout-overlay" id="timeoutOverlay">
+            <div class="timeout-content">
+                <div class="timeout-icon">⏰</div>
+                <h2 class="timeout-title">Time's Up!</h2>
+                <p class="timeout-winner" id="timeoutWinner">White wins on time</p>
+                <button class="timeout-btn" id="newGameBtn">New Game</button>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="modal-overlay" id="settingsModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Settings</h2>
+                    <button class="modal-close" id="closeSettings">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-group">
+                        <h3>Time Control</h3>
+                        <div class="time-inputs">
+                            <div class="input-group">
+                                <label for="minutes">Minutes</label>
+                                <input type="number" id="minutes" min="0" max="180" value="5">
+                            </div>
+                            <div class="input-group">
+                                <label for="seconds">Seconds</label>
+                                <input type="number" id="seconds" min="0" max="59" value="0">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <h3>Increment Type</h3>
+                        <div class="increment-type-selector">
+                            <button class="increment-type-btn active" data-type="fischer">
+                                <span class="type-name">Fischer</span>
+                                <span class="type-desc">Time added after each move</span>
+                            </button>
+                            <button class="increment-type-btn" data-type="bronstein">
+                                <span class="type-name">Bronstein</span>
+                                <span class="type-desc">Delay before timer starts</span>
+                            </button>
+                            <button class="increment-type-btn" data-type="none">
+                                <span class="type-name">None</span>
+                                <span class="type-desc">No increment or delay</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="setting-group" id="incrementGroup">
+                        <h3>Increment (seconds)</h3>
+                        <div class="input-group single">
+                            <input type="number" id="increment" min="0" max="60" value="3">
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>Sound Effects</h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="soundToggle" checked>
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label">Enable sounds</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn secondary" id="cancelSettings">Cancel</button>
+                    <button class="modal-btn primary" id="applySettings">Apply & Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
